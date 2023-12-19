@@ -1,2 +1,4 @@
-package Controller;public class Platform {
+package Controller;
+
+public class Platform {
 }
