@@ -3,7 +3,7 @@ package Data;
 public class VotingOption {
 
     private final String party;
-    public VotingOption (String option) { this.party = option; }
+    public VotingOption (String option) { this. party = option; }
     public String getParty () { return party; }
     @Override
     public boolean equals (Object o) {
