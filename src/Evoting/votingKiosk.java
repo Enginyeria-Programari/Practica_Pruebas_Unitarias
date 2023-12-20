@@ -5,6 +5,9 @@ import Data.Nif;
 import Data.Password;
 import Data.VotingOption;
 import Evoting.BiometricDataPeripheral.BiometricData;
+import Evoting.BiometricDataPeripheral.HumanBiometricScanner;
+import Evoting.BiometricDataPeripheral.PassportBiometricReader;
+import Evoting.BiometricDataPeripheral.SingleBiometricData;
 import Services.ElectoralOrganism;
 import Services.LocalService;
 import Services.Scrutiny;
@@ -19,10 +22,33 @@ public class votingKiosk {
     private final LocalService localService;
     private final Scrutiny scrutiny;
 
+
+    private BiometricData Passport_data;
+    private BiometricData User_data;
+
+    private SingleBiometricData finger_print;
+    private SingleBiometricData face_scan;
+
+    private PassportBiometricReader passportBiometricReader;
+    private HumanBiometricScanner humanBiometricScanner;
+
+    private char explicit_consent;
+
+
+
     public votingKiosk(ElectoralOrganism electoralOrganism, LocalService localService, Scrutiny scrutiny) {
         this.electoralOrganism = electoralOrganism;
         this.localService = localService;
         this.scrutiny = scrutiny;
+
+    }
+
+    public votingKiosk(ElectoralOrganism electoralOrganism,LocalService localService,Scrutiny scrutiny,PassportBiometricReader passportBiometricReader,HumanBiometricScanner humanBiometricScanner ){
+        this.electoralOrganism = electoralOrganism;
+        this.scrutiny = scrutiny;
+        this.localService = localService;
+        this.humanBiometricScanner=humanBiometricScanner;
+        this.passportBiometricReader = passportBiometricReader;
     }
 
     public void initVoting() {
@@ -51,7 +77,7 @@ public class votingKiosk {
         }
     }
     public void enterNif(Nif nif) throws NotEnabledException, ConnectException {
-        this.nif = nif;
+        this.voterNif = nif;
     }
     public void initOptionsNavigation(){
         System.out.println("Inicio de la Navegación de Opciones");
@@ -64,34 +90,74 @@ public class votingKiosk {
         this.selectedVotingOption = vopt;
     }
     public void vote() {
-        scrutiny.
+        System.out.println("Usted ha escogido esta opcion de voto:" + selectedVotingOption.getParty());
+        System.out.println("Usted confirma la opción de voto?");
+
     }
 
     public void confirmVotingOption(char conf) throws ConnectException {
 
         if(conf == 'S'){
             System.out.println("Usted ha confirmado esta opción de voto:" + selectedVotingOption.getParty());
+            scrutiny.scrutinize(selectedVotingOption);
+            electoralOrganism.disableVoter(this.voterNif);
         }else{
             System.out.println("Usted no ha confirmado esta opción de voto, porfabor escoja opcion de voto");
         }
     }
     // Internal operation, not required
-    private void finalizeSession() {}
+    private void finalizeSession(){
+    }
     // Setter methods for injecting dependences and additional methods
 
-    private void verifiyBiometricData
-            (BiometricData humanBioD, BiometricData passpBioD)
-            throws BiometricVerificationFailedException {}
-    private void removeBiometricData () {}
+    private void verifiyBiometricData(BiometricData humanBioD, BiometricData passpBioD) throws BiometricVerificationFailedException {
+            if(humanBioD.equals(passpBioD)){
+                System.out.println("Su identidad ha sido verificada");
+            }else{
+                throw new BiometricVerificationFailedException("Failed Verfication");
+            }
+    }
+    private void removeBiometricData (){
+        this.Passport_data = null;
+        this.User_data=null;
+        this.finger_print = null;
+        this.face_scan=null;
+        System.out.println("Datos biométricos del pasaporte eliminados.");
+    }
 
-    public void grantExplicitConsent (char cons) {}
-    public void readPassport ()
-            throws NotValidPassportException, PassportBiometricReadingException
-    {}
-    public void readFaceBiometrics () throws HumanBiometricScanningException
-    {}
+    public void grantExplicitConsent (char cons) {
+        if(cons == 'S'){
+            System.out.println("Usted ha dado su consentimiento");
+
+        }else{
+            System.out.println("Usted no ha dado su consentimiento");
+        }
+        this.explicit_consent = cons;
+    }
+    public void readPassport () throws NotValidPassportException, PassportBiometricReadingException
+    {
+        BiometricData bio = passportBiometricReader.getPassportBiometricData();
+        passportBiometricReader.validatePassport();
+        this.Passport_data = bio;
+        this.voterNif = passportBiometricReader.getNifWithOCR();
+
+
+    }
+    public void readFaceBiometrics() throws HumanBiometricScanningException
+    {
+        this.face_scan = humanBiometricScanner.scanFaceBiometrics();
+    }
     public void readFingerPrintBiometrics() throws NotEnabledException, HumanBiometricScanningException, BiometricVerificationFailedException, ConnectException
-    {}
+    {
+        this.finger_print = humanBiometricScanner.scanFingerprintBiometrics();
+        this.User_data = new BiometricData(this.face_scan,this.finger_print);
+        verifiyBiometricData(User_data,Passport_data);
+        electoralOrganism.canVote(this.voterNif);
+
+
+
+
+    }
 
 
 
