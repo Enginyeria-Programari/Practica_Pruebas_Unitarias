@@ -20,21 +20,12 @@ public class Scrutiny_ok implements Scrutiny {
 
     @Override
     public void initVoteCount(List<VotingOption> validParties) {
-        for (VotingOption party : validParties) {
-            voteCounts.put(party, 0);
-        }
+
     }
 
     @Override
     public void scrutinize(VotingOption vopt) {
-        if (vopt == null) {
-            nullVotes++;
-        } else if (vopt.getParty().equalsIgnoreCase("BLANK")) {
-            blankVotes++;
-        } else {
-            int currentCount = voteCounts.getOrDefault(vopt, 0);
-            voteCounts.put(vopt, currentCount + 1);
-        }
+        System.out.println("Scrutining ok");
     }
 
     @Override

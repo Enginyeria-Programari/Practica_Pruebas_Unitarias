@@ -1,4 +1,4 @@
-package Testing_case.Interfaces;
+package Biometrical_Testing.Interfaces;
 
 import Controller.Exceptions.*;
 import org.junit.jupiter.api.Test;

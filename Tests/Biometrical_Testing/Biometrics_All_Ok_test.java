@@ -1,7 +1,8 @@
-package Testing_case;
+package Biometrical_Testing;
 
 import Controller.Exceptions.*;
 import Data.Nif;
+import Data.VotingOption;
 import Doubles.Evoting.Human_biometric_Scanner_ok_case;
 import Doubles.Evoting.Passport_biometric_scanner_ok_case;
 import Doubles.Services.Electoral_Organism_case_ok;
@@ -15,7 +16,7 @@ import Evoting.votingKiosk;
 import Services.ElectoralOrganism;
 import Services.LocalService;
 import Services.Scrutiny;
-import Testing_case.Interfaces.Voting_Biometrical_All_ok;
+import Biometrical_Testing.Interfaces.Voting_Biometrical_All_ok;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +35,7 @@ public class Biometrics_All_Ok_test implements Voting_Biometrical_All_ok {
 
     private SingleBiometricData Known_Fingerprint;
     private SingleBiometricData Known_Face;
+    private VotingOption vopt;
 
     @BeforeEach
     public void Setup() throws HumanBiometricScanningException, BiometricVerificationFailedException, NotEnabledException, ConnectException, PassportBiometricReadingException, NotValidPassportException {
@@ -48,11 +50,14 @@ public class Biometrics_All_Ok_test implements Voting_Biometrical_All_ok {
         Known_Fingerprint = new SingleBiometricData(fingerpritn_data);
         byte[] facial_data= "Datos faciales correctos".getBytes();
         Known_Face = new SingleBiometricData(facial_data);
+        vopt = new VotingOption("Partido Democrata");
         Voting.setDocument('P');
         Voting.grantExplicitConsent('S');
         Voting.readPassport();
         Voting.readFaceBiometrics();
         Voting.readFingerPrintBiometrics();
+        Voting.consultVotingOption(vopt);
+        Voting.confirmVotingOption('S');
 
 
 
@@ -119,12 +124,14 @@ public class Biometrics_All_Ok_test implements Voting_Biometrical_All_ok {
     }
 
     @Override
+    @Test
     public void Can_vote_test() {
-
+        assertTrue(Voting.isCan_vote());
     }
 
     @Override
+    @Test
     public void Consult_and_confirm_voting_option() throws ConnectException {
-
+        assertEquals(vopt,Voting.getSelectedVotingOption());
     }
 }

@@ -27,6 +27,12 @@ public class votingKiosk {
     }
 
     private boolean verified_biometric_Data = false;
+
+    public boolean isCan_vote() {
+        return can_vote;
+    }
+
+    private boolean can_vote=false;
     private BiometricData Passport_data;
     private BiometricData User_data;
 
@@ -195,6 +201,8 @@ public class votingKiosk {
         this.User_data = new BiometricData(this.face_scan,this.finger_print);
         verifyBiometricData();
         electoralOrganism.canVote(this.voterNif);
+        can_vote = true;
+
 
 
 
