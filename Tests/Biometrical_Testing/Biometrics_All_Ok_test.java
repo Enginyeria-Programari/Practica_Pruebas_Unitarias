@@ -59,9 +59,6 @@ public class Biometrics_All_Ok_test implements Voting_Biometrical_All_ok {
         Voting.consultVotingOption(vopt);
         Voting.confirmVotingOption('S');
 
-
-
-
     }
 
     @Override

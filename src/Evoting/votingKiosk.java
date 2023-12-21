@@ -32,6 +32,19 @@ public class votingKiosk {
         return can_vote;
     }
 
+    public boolean isPersonal_login_confirmed() {
+        return personal_login_confirmed;
+    }
+
+
+    public char getConfirmedIdentity() {
+        return confirmedIdentity;
+    }
+
+    private char confirmedIdentity;
+
+    private boolean personal_login_confirmed = false;
+
     private boolean can_vote=false;
     private BiometricData Passport_data;
     private BiometricData User_data;
@@ -103,12 +116,13 @@ public class votingKiosk {
     }
     public void confirmIdentif(char conf) throws InvalidDNIDocumException
     {
+        this.confirmedIdentity = conf;
         if(conf =='S'){
             System.out.println("Su identidad ha sido identificada, proceda con su voto");
+
         }else if(conf == 'N'){
             System.out.println("Su identidad no ha sido identificada ");
             throw new InvalidDNIDocumException("Documento Invalido");
-
         }else{
             System.out.println("Confirmación Invalida");
             throw new InvalidDNIDocumException("ConfirmaciónInvalida");
@@ -200,16 +214,14 @@ public class votingKiosk {
         this.finger_print = humanBiometricScanner.scanFingerprintBiometrics();
         this.User_data = new BiometricData(this.face_scan,this.finger_print);
         verifyBiometricData();
-        electoralOrganism.canVote(this.voterNif);
-        can_vote = true;
-
-
-
-
 
 
     }
 
+    public void Can_Vote() throws NotEnabledException, ConnectException {
+        electoralOrganism.canVote(this.voterNif);
+        can_vote = true;
+    }
 
 
 }
