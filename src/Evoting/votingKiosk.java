@@ -22,9 +22,29 @@ public class votingKiosk {
     private final LocalService localService;
     private final Scrutiny scrutiny;
 
+    public boolean isVerified_biometric_Data() {
+        return verified_biometric_Data;
+    }
 
+    private boolean verified_biometric_Data = false;
     private BiometricData Passport_data;
     private BiometricData User_data;
+
+    public BiometricData getPassport_data() {
+        return Passport_data;
+    }
+
+    public BiometricData getUser_data() {
+        return User_data;
+    }
+
+    public SingleBiometricData getFinger_print() {
+        return finger_print;
+    }
+
+    public SingleBiometricData getFace_scan() {
+        return face_scan;
+    }
 
     private SingleBiometricData finger_print;
     private SingleBiometricData face_scan;
@@ -32,23 +52,35 @@ public class votingKiosk {
     private PassportBiometricReader passportBiometricReader;
     private HumanBiometricScanner humanBiometricScanner;
 
+    public char getSelectedDocumentType() {
+        return selectedDocumentType;
+    }
+
+    public Nif getVoterNif() {
+        return voterNif;
+    }
+
+    public VotingOption getSelectedVotingOption() {
+        return selectedVotingOption;
+    }
+
+    public char getExplicit_consent() {
+        return explicit_consent;
+    }
+
     private char explicit_consent;
 
 
 
-    public votingKiosk(ElectoralOrganism electoralOrganism, LocalService localService, Scrutiny scrutiny) {
-        this.electoralOrganism = electoralOrganism;
-        this.localService = localService;
-        this.scrutiny = scrutiny;
 
-    }
+    public votingKiosk(ElectoralOrganism electoralOrganism,Scrutiny scrutiny,PassportBiometricReader passportBiometricReader,HumanBiometricScanner humanBiometricScanner,LocalService localService){
 
-    public votingKiosk(ElectoralOrganism electoralOrganism,LocalService localService,Scrutiny scrutiny,PassportBiometricReader passportBiometricReader,HumanBiometricScanner humanBiometricScanner ){
-        this.electoralOrganism = electoralOrganism;
         this.scrutiny = scrutiny;
-        this.localService = localService;
         this.humanBiometricScanner=humanBiometricScanner;
         this.passportBiometricReader = passportBiometricReader;
+        this.electoralOrganism = electoralOrganism;
+        this.localService = localService;
+
     }
 
     public void initVoting() {
@@ -110,14 +142,24 @@ public class votingKiosk {
     }
     // Setter methods for injecting dependences and additional methods
 
+    public void  verifyBiometricData() throws BiometricVerificationFailedException {
+        BiometricData User_data = new BiometricData(face_scan,finger_print);
+        verifiyBiometricData(User_data,Passport_data);
+    }
+
     private void verifiyBiometricData(BiometricData humanBioD, BiometricData passpBioD) throws BiometricVerificationFailedException {
             if(humanBioD.equals(passpBioD)){
                 System.out.println("Su identidad ha sido verificada");
+                verified_biometric_Data = true;
+
             }else{
+                verified_biometric_Data = false;
                 throw new BiometricVerificationFailedException("Failed Verfication");
+
             }
     }
-    private void removeBiometricData (){
+
+    public void removeBiometricData (){
         this.Passport_data = null;
         this.User_data=null;
         this.finger_print = null;
@@ -151,8 +193,9 @@ public class votingKiosk {
     {
         this.finger_print = humanBiometricScanner.scanFingerprintBiometrics();
         this.User_data = new BiometricData(this.face_scan,this.finger_print);
-        verifiyBiometricData(User_data,Passport_data);
+        verifyBiometricData();
         electoralOrganism.canVote(this.voterNif);
+
 
 
 

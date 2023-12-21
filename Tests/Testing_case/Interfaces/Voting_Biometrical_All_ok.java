@@ -1,22 +1,38 @@
 package Testing_case.Interfaces;
 
-import Controller.Exceptions.HumanBiometricScanningException;
-import Controller.Exceptions.NotValidPassportException;
+import Controller.Exceptions.*;
 import org.junit.jupiter.api.Test;
 
-public interface Biometrical_test {
+public interface Voting_Biometrical_All_ok {
+
+    @Test
+    void select_document();
+    @Test
+    void get_explicit_consent();
 
     @Test
     void read_facial_id() throws HumanBiometricScanningException;
 
     @Test
-    void read_finger_id_test() throws HumanBiometricScanningException;
+    void read_fingerprint_id_test() throws HumanBiometricScanningException, BiometricVerificationFailedException, NotEnabledException, ConnectException;
 
     @Test
-    void validate_Passport_test() throws NotValidPassportException;
+    void read_Passport_test() throws NotValidPassportException, PassportBiometricReadingException;
 
     @Test
-    void
+    void verify_identity_test() throws BiometricVerificationFailedException, HumanBiometricScanningException, NotEnabledException, ConnectException, PassportBiometricReadingException, NotValidPassportException;
+
+    @Test
+    void remove_biometric_data_test();
+
+    @Test
+    void Can_vote_test();
+
+
+    @Test
+    void Consult_and_confirm_voting_option() throws ConnectException;
+
+
 
 
 
