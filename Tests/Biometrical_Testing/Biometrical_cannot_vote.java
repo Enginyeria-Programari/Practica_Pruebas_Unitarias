@@ -122,6 +122,7 @@ public class Biometrical_cannot_vote implements Voting_Biometrical_Normal_Excecu
     public void Can_vote_test() throws NotEnabledException, ConnectException {
 
         assertThrows(NotEnabledException.class,()->Voting.Can_Vote());
+        assertFalse(Voting.isCan_vote());
     }
 
     @Override
