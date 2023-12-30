@@ -5,19 +5,14 @@ import Controller.Exceptions.NotEnabledException;
 import Data.Nif;
 import Services.ElectoralOrganism;
 
-public class Electoral_Organism_failed_connection_disable implements ElectoralOrganism {
+public class ElectoralOrganism_cannot_vote implements ElectoralOrganism {
     @Override
     public void canVote(Nif nif) throws NotEnabledException, ConnectException {
-        Nif wanted_nif = new Nif("55555555B");
-        if(nif.equals(wanted_nif)){
-            System.out.println("Canvote ok");
-        }else{
-            throw new NotEnabledException("Nif Incorrecto");
-        }
+        throw new NotEnabledException("You can't vote");
     }
 
     @Override
     public void disableVoter(Nif nif) throws ConnectException {
-        throw new ConnectException("Error de conexion");
+
     }
 }

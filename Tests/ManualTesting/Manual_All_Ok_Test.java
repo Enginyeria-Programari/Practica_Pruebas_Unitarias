@@ -62,16 +62,19 @@ public class Manual_All_Ok_Test implements Voting_Manual_All_Ok {
     }
 
     @Override
+    @Test
     public void personal_worker_login() {
         assertTrue(Voting.isPersonal_login_confirmed());
     }
 
     @Override
+    @Test
     public void enter_Nif() {
         assertEquals(Voter, Voting.getVoterNif());
     }
 
     @Override
+    @Test
     public void confirm_identity() {
         assertEquals('S', Voting.getConfirmedIdentity());
     }

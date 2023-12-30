@@ -13,6 +13,6 @@ public class Electoral_Organism_failed_connection implements ElectoralOrganism {
 
     @Override
     public void disableVoter(Nif nif) throws ConnectException {
-
+        throw new ConnectException("Error de COnexion");
     }
 }

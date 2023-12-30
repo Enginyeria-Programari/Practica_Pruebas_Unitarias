@@ -3,7 +3,7 @@ package Biometrical_Testing.Interfaces;
 import Controller.Exceptions.*;
 import org.junit.jupiter.api.Test;
 
-public interface Voting_Biometrical_All_ok {
+public interface Voting_Biometrical_Normal_Excecution {
 
     @Test
     void select_document();
@@ -26,7 +26,7 @@ public interface Voting_Biometrical_All_ok {
     void remove_biometric_data_test();
 
     @Test
-    void Can_vote_test();
+    void Can_vote_test() throws NotEnabledException, ConnectException;
 
 
     @Test

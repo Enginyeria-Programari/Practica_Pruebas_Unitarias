@@ -113,6 +113,7 @@ public class votingKiosk {
     }
     public void enterAccount(String login, Password pssw) throws InvalidAccountException{
         localService.verifyAccount(login,pssw);
+        this.personal_login_confirmed = true;
     }
     public void confirmIdentif(char conf) throws InvalidDNIDocumException
     {
@@ -220,7 +221,7 @@ public class votingKiosk {
 
     public void Can_Vote() throws NotEnabledException, ConnectException {
         electoralOrganism.canVote(this.voterNif);
-        can_vote = true;
+        this.can_vote = true;
     }
 
 

@@ -16,14 +16,14 @@ import Evoting.votingKiosk;
 import Services.ElectoralOrganism;
 import Services.LocalService;
 import Services.Scrutiny;
-import Biometrical_Testing.Interfaces.Voting_Biometrical_All_ok;
+import Biometrical_Testing.Interfaces.Voting_Biometrical_Normal_Excecution;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class Biometrics_All_Ok_test implements Voting_Biometrical_All_ok {
+public class Biometrics_All_Ok_test implements Voting_Biometrical_Normal_Excecution {
 
     private ElectoralOrganism electoralOrganism;
     private HumanBiometricScanner human_scan;
@@ -56,6 +56,7 @@ public class Biometrics_All_Ok_test implements Voting_Biometrical_All_ok {
         Voting.readPassport();
         Voting.readFaceBiometrics();
         Voting.readFingerPrintBiometrics();
+        Voting.Can_Vote();
         Voting.consultVotingOption(vopt);
         Voting.confirmVotingOption('S');
 
@@ -122,7 +123,7 @@ public class Biometrics_All_Ok_test implements Voting_Biometrical_All_ok {
 
     @Override
     @Test
-    public void Can_vote_test() {
+    public void Can_vote_test() throws NotEnabledException{
         assertTrue(Voting.isCan_vote());
     }
 
